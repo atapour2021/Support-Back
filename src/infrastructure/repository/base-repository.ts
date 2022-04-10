@@ -14,7 +14,7 @@ export class BaseRepository<T extends BaseModel> {
   }
 
   public async findById(id: string): Promise<T> {
-    return this.model.findById(id).exec();
+    return await this.model.findById(id).exec();
   }
 
   public async findAll(): Promise<T[]> {
