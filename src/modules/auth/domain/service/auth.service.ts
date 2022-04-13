@@ -1,21 +1,21 @@
-import {
-  HttpException,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { LoginDto, RegisterDto } from '@root/auth/application/auth.dto';
 import { User } from '@root/user/domain/schema/user.schema';
 import { UserService } from '@root/user/domain/service/user.service';
+import { persian } from '@shared/dictionary/persian';
+import { BaseResponse } from 'src/shared/result-model/base-result-model';
 
 @Injectable()
 export class AuthService {
+  result = new BaseResponse();
+
   constructor(
     private userService: UserService,
     private jwtService: JwtService,
   ) {}
 
-  async login(body: LoginDto) {
+  async login(body: LoginDto): Promise<BaseResponse<any>> {
     const users = await this.userService.findAll();
     const user = users.find(
       (u) => u.userName === body.userName && u.password === body.password,
@@ -23,18 +23,54 @@ export class AuthService {
 
     if (user) {
       const payload = { id: user._id };
-      return {
-        access_token: this.jwtService.sign(payload),
+      const token = this.jwtService.sign(payload);
+      this.result.init({
+        data: token,
         success: true,
-        text: 'success',
-      };
+        successMassage: undefined,
+        errorMassage: undefined,
+      });
+
+      return this.result;
     } else {
-      throw new HttpException('inValid user', 201);
+      this.result.init({
+        data: null,
+        success: false,
+        successMassage: undefined,
+        errorMassage: persian.LoginUserNotFoundErrorMassage,
+      });
+
+      return this.result;
     }
   }
 
-  async register(body: RegisterDto) {
-    return this.userService.create(body);
+  async register(body: RegisterDto): Promise<BaseResponse<any>> {
+    const users = await this.userService.findAll();
+    const user = await this.userService.create(body);
+    const alreadyUser = users.find(
+      (u) =>
+        u.userName === user.userName || u.nationalCode === user.nationalCode,
+    );
+
+    if (!alreadyUser) {
+      this.result.init({
+        data: user,
+        success: true,
+        successMassage: persian.RegisterSuccessfully,
+        errorMassage: undefined,
+      });
+
+      return this.result;
+    } else {
+      this.result.init({
+        data: null,
+        success: false,
+        successMassage: undefined,
+        errorMassage: persian.TheUserHasAlreadyRegisteredWithThisProfile,
+      });
+
+      return this.result;
+    }
   }
 
   async verifyPayload(payload: any): Promise<User> {

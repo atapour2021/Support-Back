@@ -32,6 +32,7 @@
     "class-transformer": "^0.5.1",
     "express-basic-auth": "^1.2.1",
     "mongoose": "^6.2.10",
+    "nestjs-i18n": "^9.0.5",
     "passport": "^0.5.2",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
