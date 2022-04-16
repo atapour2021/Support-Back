@@ -1,5 +1,6 @@
 import { BaseModel } from 'src/infrastructure/model/base-model';
 import { ApiProperty } from '@nestjs/swagger';
+import { Role } from '@root/auth/enums/role.enum';
 
 export class LoginDto extends BaseModel {
   @ApiProperty()
@@ -27,4 +28,6 @@ export class RegisterDto extends BaseModel {
 
   @ApiProperty()
   nationalCode: string;
+
+  role: Role;
 }

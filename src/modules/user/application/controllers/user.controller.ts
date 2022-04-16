@@ -9,7 +9,9 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { Roles } from '@root/auth/domain/decorator/roles.decorator';
 import { JWTAuthGuard } from '@root/auth/domain/guards/jwt-auth.guard';
+import { Role } from '@root/auth/enums/role.enum';
 import { UserService } from '../../domain/service/user.service';
 import { UserDto } from '../dto/user.dto';
 
@@ -19,6 +21,7 @@ export class UserController {
   constructor(private readonly service: UserService) {}
 
   @Get()
+  @Roles(Role.Admin)
   @ApiBearerAuth('access-token')
   @UseGuards(JWTAuthGuard)
   async getAll() {
@@ -26,6 +29,7 @@ export class UserController {
   }
 
   @Get(':id')
+  @Roles(Role.Admin)
   @ApiBearerAuth('access-token')
   @UseGuards(JWTAuthGuard)
   async find(@Param('id') id: string) {
@@ -33,6 +37,7 @@ export class UserController {
   }
 
   @Post()
+  @Roles(Role.Admin)
   @ApiBearerAuth('access-token')
   @UseGuards(JWTAuthGuard)
   async create(@Body() userDto: UserDto) {
@@ -40,6 +45,7 @@ export class UserController {
   }
 
   @Put(':id')
+  @Roles(Role.Admin)
   @ApiBearerAuth('access-token')
   @UseGuards(JWTAuthGuard)
   async update(@Param('id') id: string, @Body() userDto: UserDto) {
@@ -47,6 +53,7 @@ export class UserController {
   }
 
   @Delete(':id')
+  @Roles(Role.Admin)
   @ApiBearerAuth('access-token')
   @UseGuards(JWTAuthGuard)
   async delete(@Param('id') id: string) {

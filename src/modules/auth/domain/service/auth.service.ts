@@ -1,6 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { LoginDto, RegisterDto } from '@root/auth/application/auth.dto';
+import { Role } from '@root/auth/enums/role.enum';
 import { User } from '@root/user/domain/schema/user.schema';
 import { UserService } from '@root/user/domain/service/user.service';
 import { persian } from '@shared/dictionary/persian';
@@ -20,9 +21,13 @@ export class AuthService {
     const user = users.find(
       (u) => u.userName === body.userName && u.password === body.password,
     );
+    const userRole: Role = user.role;
+    const defaultRole: Role = Role.User;
+    let payload: any;
 
     if (user) {
-      const payload = { id: user._id };
+      if (!userRole) payload = { id: user._id, role: defaultRole };
+      else payload = { id: user._id, role: userRole };
       const token = this.jwtService.sign(payload);
       this.result.init({
         data: token,
@@ -46,7 +51,16 @@ export class AuthService {
 
   async register(body: RegisterDto): Promise<BaseResponse<any>> {
     const users = await this.userService.findAll();
-    const user = await this.userService.create(body);
+    const data = {
+      userName: body.userName,
+      password: body.password,
+      firstName: body.firstName,
+      lastName: body.lastName,
+      age: body.age,
+      nationalCode: body.nationalCode,
+      role: Role.User,
+    };
+    const user = await this.userService.create(data);
     const alreadyUser = users.find(
       (u) =>
         u.userName === user.userName || u.nationalCode === user.nationalCode,

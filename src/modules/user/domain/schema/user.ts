@@ -1,3 +1,5 @@
+import { Role } from '@root/auth/enums/role.enum';
+
 export interface IUser {
   userName: string;
   firstName: string;
@@ -5,4 +7,5 @@ export interface IUser {
   age: number;
   nationalCode: string;
   password: string;
+  role: Role;
 }
