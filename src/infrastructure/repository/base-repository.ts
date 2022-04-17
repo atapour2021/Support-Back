@@ -1,5 +1,5 @@
-import { BaseModel } from '../model/base-model';
 import { Model } from 'mongoose';
+import { BaseModel } from '../model/base-model';
 
 export class BaseRepository<T extends BaseModel> {
   constructor(private readonly model: Model<T>) {}

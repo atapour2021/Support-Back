@@ -1,0 +1,34 @@
+import { Injectable } from '@nestjs/common';
+import { MenuDto } from '@root/Menu/application/dto/Menu.dto';
+import { BaseResponse } from '@shared/result-model/base-result-model';
+import { MenuRepo } from '../repository/menu.repo';
+
+@Injectable()
+export class MenuService {
+  result = new BaseResponse();
+  constructor(private readonly menuRepository: MenuRepo) {}
+
+  async getMenu(): Promise<BaseResponse<any>> {
+    const menu: MenuDto = await this.menuRepository.getMenu();
+    this.result.init({
+      data: menu,
+      success: true,
+      successMassage: undefined,
+      errorMassage: undefined,
+    });
+
+    return this.result;
+  }
+
+  async create(Menu: MenuDto): Promise<MenuDto> {
+    return await this.menuRepository.create(Menu);
+  }
+
+  async update(id: string, Menu: MenuDto): Promise<MenuDto> {
+    return await this.menuRepository.update(id, Menu);
+  }
+
+  async delete(id: string): Promise<MenuDto> {
+    return await this.menuRepository.delete(id);
+  }
+}
