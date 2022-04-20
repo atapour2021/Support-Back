@@ -1,11 +1,11 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
-import { IMenu, MenuDto } from './Menu';
+import { MenuItem } from './Menu';
 
 export type MenuDocument = Menu & Document;
 
 @Schema()
-export class Menu implements IMenu {
+export class Menu implements MenuItem {
   @Prop({ required: true })
   displayName: string;
 
@@ -15,8 +15,8 @@ export class Menu implements IMenu {
   @Prop({ required: true })
   route: string;
 
-  @Prop({ type: MenuDto })
-  children: MenuDto[];
+  @Prop({ type: MenuItem })
+  children?: MenuItem[];
 }
 
 export const MenuSchema = SchemaFactory.createForClass(Menu);

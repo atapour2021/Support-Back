@@ -1,12 +1,17 @@
-export class MenuDto implements IMenu {
-  displayName: string;
-  iconName: string;
-  route: string;
-  children?: IMenu[];
+export class MenuDto {
+  menuItems: MenuItem[];
 }
-export interface IMenu {
+
+export class MenuItem implements IMenuItem {
   displayName: string;
   iconName: string;
   route: string;
-  children?: IMenu[];
+  children?: MenuItem[];
+}
+
+export interface IMenuItem {
+  displayName: string;
+  iconName: string;
+  route: string;
+  children?: IMenuItem[];
 }

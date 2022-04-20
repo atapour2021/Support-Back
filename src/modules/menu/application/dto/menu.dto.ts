@@ -13,7 +13,7 @@ export class MenuDto extends BaseModel {
 
   @ApiProperty({
     type: MenuDto,
-    default: [{ route: '', iconName: '', displayName: '' }],
+    default: [{ route: '', iconName: '', displayName: '', children: [] }],
   })
-  children: MenuDto[];
+  children?: MenuDto[];
 }

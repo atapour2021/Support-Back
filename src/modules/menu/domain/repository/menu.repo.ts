@@ -13,8 +13,4 @@ export class MenuRepo extends BaseRepository<MenuDto> {
   ) {
     super(menuModel);
   }
-
-  getMenu(): Promise<MenuDto> {
-    return this.menuModel.findOne().exec();
-  }
 }

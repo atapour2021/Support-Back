@@ -13,6 +13,7 @@ import { Roles } from '@root/auth/domain/decorator/roles.decorator';
 import { JWTAuthGuard } from '@root/auth/domain/guards/jwt-auth.guard';
 import { Role } from '@root/auth/enums/role.enum';
 import { MenuService } from '@root/menu/domain/service/menu.service';
+import { CreateMenuDto } from '../dto/create.menu.dto';
 import { MenuDto } from '../dto/menu.dto';
 
 @ApiTags('Menu')
@@ -32,8 +33,8 @@ export class MenuController {
   @Roles(Role.User)
   @ApiBearerAuth('access-token')
   @UseGuards(JWTAuthGuard)
-  async create(@Body() menuDto: MenuDto) {
-    return await this.service.create(menuDto);
+  async create(@Body() createMenuDto: CreateMenuDto) {
+    return await this.service.create(createMenuDto);
   }
 
   @Put(':id')

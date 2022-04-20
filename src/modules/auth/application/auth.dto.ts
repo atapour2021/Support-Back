@@ -3,10 +3,10 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Role } from '@root/auth/enums/role.enum';
 
 export class LoginDto extends BaseModel {
-  @ApiProperty()
+  @ApiProperty({ default: 'kia' })
   userName: string;
 
-  @ApiProperty()
+  @ApiProperty({ default: 'kia123' })
   password: string;
 }
 
