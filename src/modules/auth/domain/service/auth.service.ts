@@ -21,13 +21,15 @@ export class AuthService {
     const user = users.find(
       (u) => u.userName === body.userName && u.password === body.password,
     );
-    const userRole: Role = user.role;
-    const defaultRole: Role = Role.User;
-    let payload: any;
 
     if (user) {
-      if (!userRole) payload = { id: user._id, role: defaultRole };
-      else payload = { id: user._id, role: userRole };
+      const userRole: Role = user.userRole;
+      const defaultRole: Role = Role.User;
+      let payload: any;
+
+      if (!userRole)
+        payload = { id: user._id, fullName: user.fullName, role: defaultRole };
+      else payload = { id: user._id, fullName: user.fullName, role: userRole };
       const token = this.jwtService.sign(payload);
       this.result.init({
         data: token,
@@ -51,16 +53,8 @@ export class AuthService {
 
   async register(body: RegisterDto): Promise<BaseResponse<any>> {
     const users = await this.userService.findAll();
-    const data = {
-      userName: body.userName,
-      password: body.password,
-      firstName: body.firstName,
-      lastName: body.lastName,
-      age: body.age,
-      nationalCode: body.nationalCode,
-      role: Role.User,
-    };
-    const user = await this.userService.create(data);
+    if (!body.userRole) body.userRole = Role.User;
+    const user = await this.userService.create(body);
     const alreadyUser = users.find(
       (u) =>
         u.userName === user.userName || u.nationalCode === user.nationalCode,

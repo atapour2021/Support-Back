@@ -30,7 +30,7 @@ export class MenuController {
   }
 
   @Post()
-  @Roles(Role.User)
+  @Roles(Role.Admin)
   @ApiBearerAuth('access-token')
   @UseGuards(JWTAuthGuard)
   async create(@Body() createMenuDto: CreateMenuDto) {
@@ -38,7 +38,7 @@ export class MenuController {
   }
 
   @Put(':id')
-  @Roles(Role.User)
+  @Roles(Role.Admin)
   @ApiBearerAuth('access-token')
   @UseGuards(JWTAuthGuard)
   async update(@Param('id') id: string, @Body() menuDto: MenuDto) {
@@ -46,7 +46,7 @@ export class MenuController {
   }
 
   @Delete(':id')
-  @Roles(Role.User)
+  @Roles(Role.Admin)
   @ApiBearerAuth('access-token')
   @UseGuards(JWTAuthGuard)
   async delete(@Param('id') id: string) {

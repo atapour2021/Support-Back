@@ -10,10 +10,7 @@ export class UserDto extends BaseModel {
   password: string;
 
   @ApiProperty()
-  firstName: string;
-
-  @ApiProperty()
-  lastName: string;
+  fullName: string;
 
   @ApiProperty()
   age: number;
@@ -21,5 +18,6 @@ export class UserDto extends BaseModel {
   @ApiProperty()
   nationalCode: string;
 
-  role: Role;
+  @ApiProperty()
+  userRole: Role;
 }

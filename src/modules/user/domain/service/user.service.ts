@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { UserDto } from '@root/user/application/dto/user.dto';
-import { UserEditDto } from '@root/user/application/dto/user.edit.dto';
 import { UserRepository } from '../repository/user.repository';
 import { User } from '../schema/user.schema';
 
@@ -20,7 +19,7 @@ export class UserService {
     return await this.userRepository.create(user);
   }
 
-  async update(id: string, user: UserEditDto): Promise<UserEditDto> {
+  async update(id: string, user: UserDto): Promise<UserDto> {
     return await this.userRepository.update(id, user);
   }
 

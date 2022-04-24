@@ -18,10 +18,7 @@ export class RegisterDto extends BaseModel {
   password: string;
 
   @ApiProperty()
-  firstName: string;
-
-  @ApiProperty()
-  lastName: string;
+  fullName: string;
 
   @ApiProperty()
   age: number;
@@ -29,5 +26,6 @@ export class RegisterDto extends BaseModel {
   @ApiProperty()
   nationalCode: string;
 
-  role: Role;
+  @ApiProperty()
+  userRole: Role;
 }

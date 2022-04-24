@@ -14,7 +14,6 @@ import { JWTAuthGuard } from '@root/auth/domain/guards/jwt-auth.guard';
 import { Role } from '@root/auth/enums/role.enum';
 import { UserService } from '../../domain/service/user.service';
 import { UserDto } from '../dto/user.dto';
-import { UserEditDto } from '../dto/user.edit.dto';
 
 @ApiTags('Users')
 @Controller('Users')
@@ -49,8 +48,8 @@ export class UserController {
   @Roles(Role.Admin)
   @ApiBearerAuth('access-token')
   @UseGuards(JWTAuthGuard)
-  async update(@Param('id') id: string, @Body() userEditDto: UserEditDto) {
-    return await this.service.update(id, userEditDto);
+  async update(@Param('id') id: string, @Body() userDto: UserDto) {
+    return await this.service.update(id, userDto);
   }
 
   @Delete(':id')

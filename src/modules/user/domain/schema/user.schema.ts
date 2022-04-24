@@ -13,16 +13,17 @@ export class User implements IUser {
   @Prop({ required: true })
   password: string;
 
-  firstName: string;
+  @Prop({ required: true })
+  fullName: string;
 
-  lastName: string;
-
+  @Prop()
   age: number;
 
-  @Prop({ required: true })
+  @Prop({ required: true, maxlength: 10, minlength: 10 })
   nationalCode: string;
 
-  role: Role;
+  @Prop({ required: true })
+  userRole: Role;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
