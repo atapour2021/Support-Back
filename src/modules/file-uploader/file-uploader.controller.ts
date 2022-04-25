@@ -14,7 +14,7 @@ import { persian } from '@shared/dictionary/persian';
 import { BaseResponse } from '@shared/result-model/base-result-model';
 import * as fs from 'fs';
 import { diskStorage } from 'multer';
-import { editFileName, fileFileFilter } from 'src/utils/file-uploading.utils';
+import { editFileName, fileFileFilter } from '@root/file-uploader/utils/file-uploading.utils';
 
 @ApiTags('file-uploader')
 @Controller('file-uploader')

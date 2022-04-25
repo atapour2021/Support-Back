@@ -3,6 +3,7 @@ import { Module } from '@nestjs/common';
 import { AuthModule } from '@root/auth/auth.module';
 import { FileUploaderModule } from '@root/file-uploader/file-uploader.module';
 import { MenuModule } from '@root/menu/menu.module';
+import { ProfileModule } from '@root/profile/profile.module';
 import { UserModule } from '@root/user/user.module';
 
 @Module({
@@ -12,6 +13,7 @@ import { UserModule } from '@root/user/user.module';
     AuthModule,
     MenuModule,
     FileUploaderModule,
+    ProfileModule,
   ],
 })
 export class AppModule {}

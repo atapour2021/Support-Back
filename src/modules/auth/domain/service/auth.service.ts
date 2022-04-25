@@ -2,6 +2,8 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { LoginDto, RegisterDto } from '@root/auth/application/auth.dto';
 import { Role } from '@root/auth/enums/role.enum';
+import { Profile } from '@root/profile/domain/schema/Profile.schema';
+import { ProfileService } from '@root/profile/domain/service/Profile.service';
 import { User } from '@root/user/domain/schema/user.schema';
 import { UserService } from '@root/user/domain/service/user.service';
 import { persian } from '@shared/dictionary/persian';
@@ -14,6 +16,7 @@ export class AuthService {
   constructor(
     private userService: UserService,
     private jwtService: JwtService,
+    private profileService: ProfileService,
   ) {}
 
   async login(body: LoginDto): Promise<BaseResponse<any>> {
@@ -28,8 +31,13 @@ export class AuthService {
       let payload: any;
 
       if (!userRole)
-        payload = { id: user._id, fullName: user.fullName, role: defaultRole };
-      else payload = { id: user._id, fullName: user.fullName, role: userRole };
+        payload = {
+          id: user._id,
+          profileId: user.profileId,
+          role: defaultRole,
+        };
+      else
+        payload = { id: user._id, profileId: user.profileId, role: userRole };
       const token = this.jwtService.sign(payload);
       this.result.init({
         data: token,
@@ -54,13 +62,15 @@ export class AuthService {
   async register(body: RegisterDto): Promise<BaseResponse<any>> {
     const users = await this.userService.findAll();
     if (!body.userRole) body.userRole = Role.User;
-    const user = await this.userService.create(body);
     const alreadyUser = users.find(
       (u) =>
-        u.userName === user.userName || u.nationalCode === user.nationalCode,
+        u.userName === body.userName || u.nationalCode === body.nationalCode,
     );
 
     if (!alreadyUser) {
+      const profile = await this.createProfile(body);
+      const user = await this.createUser(profile, body);
+
       this.result.init({
         data: user,
         success: true,
@@ -79,6 +89,31 @@ export class AuthService {
 
       return this.result;
     }
+  }
+
+  async createProfile(body: RegisterDto): Promise<Profile> {
+    const profileData: any = {
+      userName: body.userName,
+      nationalCode: body.nationalCode,
+      fullName: body.fullName,
+      userRole: body.userRole,
+    };
+    const profile = await this.profileService.create(profileData);
+
+    return profile;
+  }
+  async createUser(profile, body: RegisterDto): Promise<User> {
+    const userData: any = {
+      profileId: profile._id,
+      userName: body.userName,
+      password: body.password,
+      nationalCode: body.nationalCode,
+      fullName: body.fullName,
+      userRole: body.userRole,
+    };
+    const user = await this.userService.create(userData);
+
+    return user;
   }
 
   async verifyPayload(payload: any): Promise<User> {

@@ -1,23 +1,17 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Role } from '@root/auth/enums/role.enum';
 import { Document } from 'mongoose';
-import { IUser } from './user';
+import { IProfile } from './Profile';
 
-export type UserDocument = User & Document;
+export type ProfileDocument = Profile & Document;
 
 @Schema()
-export class User implements IUser {
+export class Profile implements IProfile {
   @Prop({ required: true })
   userName: string;
 
   @Prop({ required: true })
-  password: string;
-
-  @Prop({ required: true })
   fullName: string;
-
-  @Prop()
-  age: number;
 
   @Prop({ required: true, maxlength: 10, minlength: 10 })
   nationalCode: string;
@@ -26,7 +20,16 @@ export class User implements IUser {
   userRole: Role;
 
   @Prop()
-  profileId: string;
+  age: number;
+
+  @Prop({ maxlength: 11, minlength: 11 })
+  mobileNumber: string;
+
+  @Prop({ email: true })
+  email: string;
+
+  @Prop()
+  avatar: string;
 }
 
-export const UserSchema = SchemaFactory.createForClass(User);
+export const ProfileSchema = SchemaFactory.createForClass(Profile);
