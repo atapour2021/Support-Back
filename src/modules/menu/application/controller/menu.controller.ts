@@ -22,7 +22,6 @@ export class MenuController {
   constructor(private readonly service: MenuService) {}
 
   @Get()
-  @Roles(Role.User)
   @ApiBearerAuth('access-token')
   @UseGuards(JWTAuthGuard)
   async get() {

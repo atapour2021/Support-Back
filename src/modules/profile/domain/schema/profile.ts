@@ -9,6 +9,7 @@ export class Profile implements IProfile {
   mobileNumber: string;
   email: string;
   avatar: string;
+  description: string;
 }
 export interface IProfile {
   userName: string;
@@ -19,17 +20,5 @@ export interface IProfile {
   mobileNumber: string;
   email: string;
   avatar: string;
+  description: string;
 }
-
-// export class WorkSample implements IWorkSample {
-//   img: string;
-//   description: string;
-//   finalPrice: number;
-//   materials: string[];
-// }
-// export interface IWorkSample {
-//   img: string;
-//   description: string;
-//   finalPrice: number;
-//   materials: string[];
-// }

@@ -13,11 +13,11 @@ import { Roles } from '@root/auth/domain/decorator/roles.decorator';
 import { JWTAuthGuard } from '@root/auth/domain/guards/jwt-auth.guard';
 import { Role } from '@root/auth/enums/role.enum';
 import { ProfileService } from '../../domain/service/Profile.service';
-import { ProfileDto } from '../dto/Profile.dto';
+import { AddAvatarDto, ProfileDto } from '../dto/Profile.dto';
 
-@ApiTags('Admin-Profiles')
-@Controller('Admin-Profiles')
-export class ProfileAdminController {
+@ApiTags('Profiles')
+@Controller('Profiles')
+export class ProfileController {
   constructor(private readonly service: ProfileService) {}
 
   @Get()
@@ -29,7 +29,6 @@ export class ProfileAdminController {
   }
 
   @Get(':id')
-  @Roles(Role.Admin)
   @ApiBearerAuth('access-token')
   @UseGuards(JWTAuthGuard)
   async find(@Param('id') id: string) {
@@ -44,8 +43,14 @@ export class ProfileAdminController {
     return await this.service.create(profileDto);
   }
 
+  @Post()
+  @ApiBearerAuth('access-token')
+  @UseGuards(JWTAuthGuard)
+  async addAvatar(@Body() data: AddAvatarDto) {
+    return await this.service.addAvatar(data.id, data.imagePath);
+  }
+
   @Put(':id')
-  @Roles(Role.Admin)
   @ApiBearerAuth('access-token')
   @UseGuards(JWTAuthGuard)
   async update(@Param('id') id: string, @Body() profileDto: ProfileDto) {

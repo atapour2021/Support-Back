@@ -20,16 +20,19 @@ export class Profile implements IProfile {
   userRole: Role;
 
   @Prop()
-  age: number;
+  age: number | undefined;
 
   @Prop({ maxlength: 11, minlength: 11 })
-  mobileNumber: string;
+  mobileNumber: string | undefined;
 
   @Prop({ email: true })
-  email: string;
+  email: string | undefined;
 
   @Prop()
-  avatar: string;
+  avatar: string | undefined;
+
+  @Prop()
+  description: string | undefined;
 }
 
 export const ProfileSchema = SchemaFactory.createForClass(Profile);

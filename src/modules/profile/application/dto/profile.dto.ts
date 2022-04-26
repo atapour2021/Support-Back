@@ -27,4 +27,19 @@ export class ProfileDto extends BaseModel implements IProfile {
 
   @ApiProperty()
   avatar: string | undefined;
+
+  @ApiProperty()
+  description: string | undefined;
+}
+
+export class AddAvatarDto extends BaseModel implements IAddAvatarDto {
+  @ApiProperty()
+  id: string;
+
+  @ApiProperty()
+  imagePath: string;
+}
+export interface IAddAvatarDto {
+  id: string;
+  imagePath: string;
 }
