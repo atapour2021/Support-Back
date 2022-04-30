@@ -5,4 +5,6 @@ export enum persian {
   FileSavedSuccessfully = 'فایل با موفقیت ذخیره شد',
   FileDeletedSuccessfully = 'فایل با موفقیت حذف شد',
   EditProfileSuccessfully = 'ویرایش پروفایل با موفقیت حذف شد',
+  SystemNotification = 'پیام سیستمی',
+  Registered = 'ثبت نام کرد',
 }

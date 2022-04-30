@@ -2,6 +2,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { LoginDto, RegisterDto } from '@root/auth/application/auth.dto';
 import { Role } from '@root/auth/enums/role.enum';
+import { NotificationService } from '@root/notification/domain/service/Notification.service';
 import { Profile } from '@root/profile/domain/schema/Profile.schema';
 import { ProfileService } from '@root/profile/domain/service/Profile.service';
 import { User } from '@root/user/domain/schema/user.schema';
@@ -17,11 +18,12 @@ export class AuthService {
     private userService: UserService,
     private jwtService: JwtService,
     private profileService: ProfileService,
+    private notificationService: NotificationService,
   ) {}
 
   async login(body: LoginDto): Promise<BaseResponse<any>> {
     const users = await this.userService.findAll();
-    const user = users.find(
+    const user = users.data.find(
       (u) => u.userName === body.userName && u.password === body.password,
     );
 
@@ -60,16 +62,11 @@ export class AuthService {
   }
 
   async register(body: RegisterDto): Promise<BaseResponse<any>> {
-    const users = await this.userService.findAll();
-    if (!body.userRole) body.userRole = Role.User;
-    const alreadyUser = users.find(
-      (u) =>
-        u.userName === body.userName || u.nationalCode === body.nationalCode,
-    );
-
+    const alreadyUser = await this.checkAlreadyUser(body);
     if (!alreadyUser) {
       const profile = await this.createProfile(body);
       const user = await this.createUser(profile, body);
+      await this.createNotification(user);
 
       this.result.init({
         data: user,
@@ -90,7 +87,16 @@ export class AuthService {
       return this.result;
     }
   }
+  async checkAlreadyUser(body: RegisterDto): Promise<boolean> {
+    if (!body.userRole) body.userRole = Role.User;
+    const users = await this.userService.findAll();
+    const alreadyUser = users.data.find(
+      (u) =>
+        u.userName === body.userName || u.nationalCode === body.nationalCode,
+    );
 
+    return alreadyUser;
+  }
   async createProfile(body: RegisterDto): Promise<Profile> {
     const profileData: any = {
       userName: body.userName,
@@ -113,7 +119,18 @@ export class AuthService {
     };
     const user = await this.userService.create(userData);
 
-    return user;
+    return user.data;
+  }
+  async createNotification(user: User): Promise<BaseResponse<any>> {
+    const notification: any = {
+      title: persian.SystemNotification,
+      description: `${user.fullName} ${persian.Registered}`,
+      createDate: Date.now().toString(),
+      creator: user.fullName,
+      isVisited: false,
+    };
+
+    return await this.notificationService.create(notification);
   }
 
   async verifyPayload(payload: any): Promise<User> {
@@ -121,7 +138,7 @@ export class AuthService {
 
     try {
       const users = await this.userService.findAll();
-      user = users.find((u) => u.id === payload.id);
+      user = users.data.find((u) => u.id === payload.id);
     } catch (error) {
       throw new UnauthorizedException(
         `There isn't any user with email: ${payload.sub}`,

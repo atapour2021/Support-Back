@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
+import { NotificationModule } from '@root/notification/notification.module';
 import { ProfileModule } from '@root/profile/profile.module';
 import { SharedModule } from '@shared/shared.module';
 import { UserModule } from '../user/user.module';
@@ -15,6 +16,7 @@ import { SessionSerializer } from './session.serializer';
     PassportModule.register({ defaultStrategy: 'jwt' }),
     SharedModule,
     ProfileModule,
+    NotificationModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, LocalStrategy, JwtStrategy, SessionSerializer],

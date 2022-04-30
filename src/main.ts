@@ -26,7 +26,20 @@ async function bootstrap() {
     customSiteTitle: 'support app',
   });
 
-  app.enableCors();
+  // app.enableCors();
+  const whitelist = ['http://localhost:4200', 'http://localhost:3030'];
+  app.enableCors({
+    origin: function (origin, callback) {
+      if (!origin || whitelist.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    credentials: true,
+  });
+
   await app.listen(3030);
 }
 bootstrap();
