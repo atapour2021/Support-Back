@@ -1,3 +1,4 @@
+import { ListResponse } from '@shared/result-model/list.result';
 import { Model } from 'mongoose';
 import { BaseModel } from '../model/base-model';
 
@@ -23,5 +24,26 @@ export class BaseRepository<T extends BaseModel> {
 
   public async delete(id: string): Promise<T> {
     return await this.model.findByIdAndRemove(id).exec();
+  }
+
+  public paginate(
+    list: T[],
+    page: number,
+    pageSize: number,
+  ): ListResponse<any> {
+    const listResult = new ListResponse();
+    const paginateList = list.slice((page - 1) * pageSize, page * pageSize);
+
+    listResult.init({
+      listData: paginateList,
+      totalItem: list.length,
+      page: page,
+      pageSize: pageSize,
+      success: true,
+      successMassage: undefined,
+      errorMassage: undefined,
+    });
+
+    return listResult;
   }
 }

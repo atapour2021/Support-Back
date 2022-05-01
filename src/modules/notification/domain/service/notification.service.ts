@@ -9,28 +9,23 @@ import { Notification } from '../schema/Notification.schema';
 @Injectable()
 export class NotificationService {
   result = new BaseResponse();
-  listResult = new ListResponse();
 
   constructor(
     private readonly notificationRepository: NotificationRepository,
     private readonly notificationGateway: NotificationGateway,
   ) {}
 
-  async findAll(): Promise<ListResponse<any>> {
+  async findAll(page: number, pageSize: number): Promise<ListResponse<any>> {
     const notifications: NotificationDto[] =
       await this.notificationRepository.findAll();
 
-    this.listResult.init({
-      listData: notifications,
-      totalCount: notifications.length,
-      page: 1,
-      pageSize: notifications.length,
-      success: true,
-      successMassage: undefined,
-      errorMassage: undefined,
-    });
+    const result = this.notificationRepository.paginate(
+      notifications,
+      page,
+      pageSize,
+    );
 
-    return this.listResult;
+    return result;
   }
 
   async findOne(id: string): Promise<BaseResponse<any>> {

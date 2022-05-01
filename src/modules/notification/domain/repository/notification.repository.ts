@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+// import { IPaginate } from '@shared/result-model/list.result';
 import * as mongoose from 'mongoose';
 import { BaseRepository } from 'src/infrastructure/repository/base-repository';
 import { NotificationDto } from '../../application/dto/Notification.dto';

@@ -27,7 +27,14 @@ async function bootstrap() {
   });
 
   // app.enableCors();
-  const whitelist = ['http://localhost:4200', 'http://localhost:3030'];
+  const whitelist = [
+    'http://localhost:4200',
+    'http://localhost:3030',
+    'http://127.0.0.1:4200',
+    'http://172.17.224.1:4200',
+    'http://172.16.10.98:4200',
+    'http://127.0.0.1:3030/',
+  ];
   app.enableCors({
     origin: function (origin, callback) {
       if (!origin || whitelist.indexOf(origin) !== -1) {
