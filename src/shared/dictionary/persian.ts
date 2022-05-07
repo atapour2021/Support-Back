@@ -7,4 +7,5 @@ export enum persian {
   EditProfileSuccessfully = 'ویرایش پروفایل با موفقیت حذف شد',
   SystemNotification = 'پیام سیستمی',
   Registered = 'ثبت نام کرد',
+  DeletedSuccessfully = 'حذف با موفقیت انجام شد',
 }

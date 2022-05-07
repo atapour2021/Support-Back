@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { NotificationDto } from '@root/Notification/application/dto/Notification.dto';
 import { NotificationGateway } from '@root/notification/application/gateway/notification.gateway';
+import { persian } from '@shared/dictionary/persian';
 import { BaseResponse } from '@shared/result-model/base-result-model';
 import { ListResponse } from '@shared/result-model/list.result';
 import { NotificationRepository } from '../repository/Notification.repository';
@@ -80,7 +81,7 @@ export class NotificationService {
     this.result.init({
       data: deletedNotification,
       success: true,
-      successMassage: undefined,
+      successMassage: persian.DeletedSuccessfully,
       errorMassage: undefined,
     });
 
