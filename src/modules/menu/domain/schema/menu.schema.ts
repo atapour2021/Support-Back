@@ -1,4 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Role } from '@root/auth/enums/role.enum';
 import { Document } from 'mongoose';
 import { MenuItem } from './Menu';
 
@@ -17,6 +18,9 @@ export class Menu implements MenuItem {
 
   @Prop({ type: MenuItem })
   children?: MenuItem[];
+
+  @Prop({ required: true })
+  role: Role;
 }
 
 export const MenuSchema = SchemaFactory.createForClass(Menu);

@@ -25,7 +25,15 @@ export class MenuController {
   @ApiBearerAuth('access-token')
   @UseGuards(JWTAuthGuard)
   async get() {
+    console.log();
     return await this.service.getMenu();
+  }
+
+  @Get(':role')
+  @ApiBearerAuth('access-token')
+  @UseGuards(JWTAuthGuard)
+  async getMenuByRole(@Param('role') role: Role) {
+    return await this.service.getMenuByRole(role);
   }
 
   @Post()
