@@ -20,12 +20,15 @@ import { UserDto } from '../dto/user.dto';
 export class UserController {
   constructor(private readonly service: UserService) {}
 
-  @Get()
+  @Get('/:page/:pageSize')
   @Roles(Role.Admin)
   @ApiBearerAuth('access-token')
   @UseGuards(JWTAuthGuard)
-  async getAll() {
-    return await this.service.findAll();
+  async getAll(
+    @Param('page') page: number,
+    @Param('pageSize') pageSize: number,
+  ) {
+    return await this.service.findAllByPagination(page, pageSize);
   }
 
   @Get(':id')

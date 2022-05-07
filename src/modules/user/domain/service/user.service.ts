@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { UserDto } from '@root/user/application/dto/user.dto';
+import { persian } from '@shared/dictionary/persian';
 import { BaseResponse } from '@shared/result-model/base-result-model';
+import { ListResponse } from '@shared/result-model/list.result';
 import { UserRepository } from '../repository/user.repository';
 import { User } from '../schema/user.schema';
 
@@ -17,6 +19,17 @@ export class UserService {
       success: true,
       total: users.length,
     };
+
+    return result;
+  }
+
+  async findAllByPagination(
+    page: number,
+    pageSize: number,
+  ): Promise<ListResponse<any>> {
+    const users: UserDto[] = await this.userRepository.findAll();
+
+    const result = this.userRepository.paginate(users, page, pageSize);
 
     return result;
   }
@@ -66,7 +79,7 @@ export class UserService {
     this.result.init({
       data: result,
       success: true,
-      successMassage: undefined,
+      successMassage: persian.DeletedSuccessfully,
       errorMassage: undefined,
     });
 
