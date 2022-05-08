@@ -4,6 +4,7 @@ export class Notification implements INotification {
   createDate: Date;
   creator: string;
   isVisited: boolean;
+  userId: string;
 }
 export interface INotification {
   title: string;
@@ -11,4 +12,5 @@ export interface INotification {
   createDate: Date;
   creator: string;
   isVisited: boolean;
+  userId: string;
 }

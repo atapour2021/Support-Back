@@ -121,13 +121,14 @@ export class AuthService {
 
     return user.data;
   }
-  async createNotification(user: User): Promise<BaseResponse<any>> {
+  async createNotification(user: any): Promise<BaseResponse<any>> {
     const notification: any = {
       title: persian.SystemNotification,
       description: `${user.fullName} ${persian.Registered}`,
       createDate: Date.now().toString(),
       creator: user.fullName,
       isVisited: false,
+      userId: user._id,
     };
 
     return await this.notificationService.create(notification);

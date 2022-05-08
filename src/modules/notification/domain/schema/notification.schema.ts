@@ -18,6 +18,9 @@ export class Notification implements INotification {
   @Prop({ required: true })
   creator: string;
 
+  @Prop({ required: true })
+  userId: string;
+
   @Prop()
   isVisited: boolean;
 }

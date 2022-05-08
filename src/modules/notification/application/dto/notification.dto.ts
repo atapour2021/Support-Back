@@ -17,4 +17,7 @@ export class NotificationDto extends BaseModel implements INotification {
 
   @ApiProperty()
   isVisited: boolean;
+
+  @ApiProperty()
+  userId: string;
 }

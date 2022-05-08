@@ -18,14 +18,15 @@ import { NotificationDto } from '../dto/Notification.dto';
 export class NotificationController {
   constructor(private readonly service: NotificationService) {}
 
-  @Get('/:page/:pageSize')
+  @Get('/:page/:pageSize/:userId')
   @ApiBearerAuth('access-token')
   @UseGuards(JWTAuthGuard)
   async getAll(
+    @Param('userId') userId: string,
     @Param('page') page: number,
     @Param('pageSize') pageSize: number,
   ) {
-    return await this.service.findAll(page, pageSize);
+    return await this.service.findAll(page, pageSize, userId);
   }
 
   @Get(':id')
