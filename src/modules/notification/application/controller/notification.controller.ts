@@ -22,9 +22,9 @@ export class NotificationController {
   @ApiBearerAuth('access-token')
   @UseGuards(JWTAuthGuard)
   async getAll(
-    @Param('userId') userId: string,
     @Param('page') page: number,
     @Param('pageSize') pageSize: number,
+    @Param('userId') userId: string,
   ) {
     return await this.service.findAll(page, pageSize, userId);
   }
