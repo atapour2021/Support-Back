@@ -8,4 +8,6 @@ export enum persian {
   SystemNotification = 'پیام سیستمی',
   Registered = 'ثبت نام کرد',
   DeletedSuccessfully = 'حذف با موفقیت انجام شد',
+  UpdatedSuccessfully = 'ویرایش با موفقیت انجام شد',
+  CreatedSuccessfully = 'ثبت با موفقیت انجام شد',
 }
