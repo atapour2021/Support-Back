@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
+import { UserModule } from '@root/user/user.module';
 import { SharedModule } from '@shared/shared.module';
 import { AdvertiseController } from './application/controller/advertise.controller';
 import { AdvertiseRepository } from './domain/repository/Advertise.repository';
@@ -12,6 +13,7 @@ import { AdvertiseService } from './domain/service/Advertise.service';
       { name: Advertise.name, schema: AdvertiseSchema },
     ]),
     SharedModule,
+    UserModule,
   ],
   controllers: [AdvertiseController],
   providers: [AdvertiseRepository, AdvertiseService],

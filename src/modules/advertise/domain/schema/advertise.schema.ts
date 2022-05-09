@@ -13,6 +13,12 @@ export class Advertise implements IAdvertise {
   creator: string;
 
   @Prop({ required: true })
+  title: string;
+
+  @Prop({ required: true })
+  type: string;
+
+  @Prop({ required: true })
   createDate: Date;
 
   @Prop()
@@ -20,6 +26,9 @@ export class Advertise implements IAdvertise {
 
   @Prop()
   extraDataFile: string;
+
+  @Prop({ required: true })
+  userId: string;
 }
 
 export const AdvertiseSchema = SchemaFactory.createForClass(Advertise);

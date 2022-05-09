@@ -20,14 +20,15 @@ import { AdvertiseDto } from '../dto/Advertise.dto';
 export class AdvertiseController {
   constructor(private readonly service: AdvertiseService) {}
 
-  @Get('/:page/:pageSize')
+  @Get('/:page/:pageSize/:userId')
   @ApiBearerAuth('access-token')
   @UseGuards(JWTAuthGuard)
   async getAll(
     @Param('page') page: number,
     @Param('pageSize') pageSize: number,
+    @Param('userId') userId: string,
   ) {
-    return await this.service.findAllByPagination(page, pageSize);
+    return await this.service.findAllByPagination(page, pageSize, userId);
   }
 
   @Get(':id')

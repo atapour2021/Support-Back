@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { AdvertiseDto } from '@root/Advertise/application/dto/Advertise.dto';
+import { UserService } from '@root/user/domain/service/user.service';
 import { persian } from '@shared/dictionary/persian';
 import { BaseResponse } from '@shared/result-model/base-result-model';
 import { ListResponse } from '@shared/result-model/list.result';
@@ -10,7 +11,10 @@ import { Advertise } from '../schema/Advertise.schema';
 export class AdvertiseService {
   result = new BaseResponse();
 
-  constructor(private readonly advertiseRepository: AdvertiseRepository) {}
+  constructor(
+    private readonly advertiseRepository: AdvertiseRepository,
+    private readonly userService: UserService,
+  ) {}
 
   async findAll(): Promise<any> {
     const advertises = await this.advertiseRepository.findAll();
@@ -26,11 +30,17 @@ export class AdvertiseService {
   async findAllByPagination(
     page: number,
     pageSize: number,
-  ): Promise<ListResponse<any>> {
+    userId: string,
+  ): Promise<ListResponse<AdvertiseDto>> {
+    const userAdvertises: AdvertiseDto[] = [];
     const advertises: AdvertiseDto[] = await this.advertiseRepository.findAll();
 
+    advertises.forEach((advertise: AdvertiseDto) => {
+      if (advertise.userId === userId) userAdvertises.push(advertise);
+    });
+
     const result = this.advertiseRepository.paginate(
-      advertises,
+      userAdvertises,
       page,
       pageSize,
     );
@@ -52,6 +62,8 @@ export class AdvertiseService {
   }
 
   async create(Advertise: Advertise): Promise<BaseResponse<any>> {
+    const user = await this.userService.findOne(Advertise.userId);
+    Advertise.creator = user.data.fullName;
     const result: AdvertiseDto = await this.advertiseRepository.create(
       Advertise,
     );

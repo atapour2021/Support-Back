@@ -7,10 +7,19 @@ export class AdvertiseDto extends BaseModel implements IAdvertise {
   image: string;
 
   @ApiProperty({ required: true })
+  title: string;
+
+  @ApiProperty({ required: true })
+  type: string;
+
+  @ApiProperty({ required: true })
   creator: string;
 
   @ApiProperty({ required: true })
   createDate: Date;
+
+  @ApiProperty({ required: true })
+  userId: string;
 
   @ApiProperty()
   description: string;
