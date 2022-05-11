@@ -39,7 +39,7 @@ export class SponsorController {
   }
 
   @Post()
-  @Roles(Role.Sponsor)
+  @Roles(Role.User)
   @ApiBearerAuth('access-token')
   @UseGuards(JWTAuthGuard)
   async create(@Body() sponsorDto: SponsorDto) {

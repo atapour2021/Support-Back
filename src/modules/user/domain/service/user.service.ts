@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Role } from '@root/auth/enums/role.enum';
+import { ProfileService } from '@root/profile/domain/service/Profile.service';
 import { UserDto } from '@root/user/application/dto/user.dto';
 import { persian } from '@shared/dictionary/persian';
 import { BaseResponse } from '@shared/result-model/base-result-model';
@@ -11,7 +12,10 @@ import { User } from '../schema/user.schema';
 export class UserService {
   result = new BaseResponse();
 
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(
+    private readonly userRepository: UserRepository,
+    private readonly profileService: ProfileService,
+  ) {}
 
   async findAll(): Promise<any> {
     const users = await this.userRepository.findAll();
@@ -90,10 +94,14 @@ export class UserService {
   async changeRole(userId: string): Promise<BaseResponse<any>> {
     const user: User = await this.userRepository.findById(userId);
     user.userRole = Role.Sponsor;
-    const result = await this.userRepository.update(userId, user);
+    await this.userRepository.update(userId, user);
+
+    const profile = await this.profileService.findOne(user.profileId);
+    profile.userRole = Role.Sponsor;
+    await this.profileService.update(user.profileId, profile);
 
     this.result.init({
-      data: result,
+      data: null,
       success: true,
       successMassage: persian.ChangeRoleSuccessfully,
       errorMassage: undefined,
