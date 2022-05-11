@@ -10,4 +10,5 @@ export enum persian {
   DeletedSuccessfully = 'حذف با موفقیت انجام شد',
   UpdatedSuccessfully = 'ویرایش با موفقیت انجام شد',
   CreatedSuccessfully = 'ثبت با موفقیت انجام شد',
+  ChangeRoleSuccessfully = 'تغییر سمت با موفقیت انجام شد',
 }

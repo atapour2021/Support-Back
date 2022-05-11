@@ -4,6 +4,9 @@ import { BaseModel } from 'src/infrastructure/model/base-model';
 
 export class SponsorDto extends BaseModel implements ISponsor {
   @ApiProperty()
+  userId: string;
+
+  @ApiProperty()
   isLegal: boolean;
 
   @ApiProperty()

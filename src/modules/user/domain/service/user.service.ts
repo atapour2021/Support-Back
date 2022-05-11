@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { Role } from '@root/auth/enums/role.enum';
 import { UserDto } from '@root/user/application/dto/user.dto';
 import { persian } from '@shared/dictionary/persian';
 import { BaseResponse } from '@shared/result-model/base-result-model';
@@ -80,6 +81,21 @@ export class UserService {
       data: result,
       success: true,
       successMassage: persian.DeletedSuccessfully,
+      errorMassage: undefined,
+    });
+
+    return this.result;
+  }
+
+  async changeRole(userId: string): Promise<BaseResponse<any>> {
+    const user: User = await this.userRepository.findById(userId);
+    user.userRole = Role.Sponsor;
+    const result = await this.userRepository.update(userId, user);
+
+    this.result.init({
+      data: result,
+      success: true,
+      successMassage: persian.ChangeRoleSuccessfully,
       errorMassage: undefined,
     });
 

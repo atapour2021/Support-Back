@@ -7,6 +7,9 @@ export type SponsorDocument = Sponsor & Document;
 @Schema()
 export class Sponsor implements ISponsor {
   @Prop({ required: true })
+  userId: string;
+
+  @Prop({ required: true })
   isLegal: boolean;
 
   @Prop()

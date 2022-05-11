@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { SponsorDto } from '@root/Sponsor/application/dto/Sponsor.dto';
+import { UserService } from '@root/user/domain/service/user.service';
 import { persian } from '@shared/dictionary/persian';
 import { BaseResponse } from '@shared/result-model/base-result-model';
 import { ListResponse } from '@shared/result-model/list.result';
@@ -10,7 +11,10 @@ import { Sponsor } from '../schema/Sponsor.schema';
 export class SponsorService {
   result = new BaseResponse();
 
-  constructor(private readonly sponsorRepository: SponsorRepository) {}
+  constructor(
+    private readonly sponsorRepository: SponsorRepository,
+    private readonly userService: UserService,
+  ) {}
 
   async findAll(): Promise<any> {
     const sponsors = await this.sponsorRepository.findAll();
@@ -48,7 +52,8 @@ export class SponsorService {
   }
 
   async create(Sponsor: Sponsor): Promise<BaseResponse<any>> {
-    const result: SponsorDto = await this.sponsorRepository.create(Sponsor);
+    const sponser: SponsorDto = await this.sponsorRepository.create(Sponsor);
+    const result = await this.userService.changeRole(sponser.userId);
 
     this.result.init({
       data: result,
