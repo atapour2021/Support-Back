@@ -35,8 +35,6 @@ export class AuthController {
     return this.authService.signOut(user.data);
   }
 
-  @ApiBearerAuth('access-token')
-  @UseGuards(JWTAuthGuard)
   @Post('/refresh-token')
   async refreshToken(@Body() body: RefreshTokenDto) {
     const user: BaseResponse<UserDto> = await this.userService.findOne(
