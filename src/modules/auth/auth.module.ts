@@ -7,8 +7,6 @@ import { UserModule } from '../user/user.module';
 import { AuthController } from './application/auth.controller';
 import { AuthService } from './domain/service/auth.service';
 import { JwtStrategy } from './domain/strategies/jwt.strategy';
-import { LocalStrategy } from './domain/strategies/local.strategy';
-import { SessionSerializer } from './session.serializer';
 
 @Module({
   imports: [
@@ -19,6 +17,6 @@ import { SessionSerializer } from './session.serializer';
     NotificationModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, JwtStrategy, SessionSerializer],
+  providers: [AuthService, JwtStrategy],
 })
 export class AuthModule {}

@@ -9,6 +9,7 @@ import { User } from '@root/user/domain/schema/user.schema';
 import { UserService } from '@root/user/domain/service/user.service';
 import { persian } from '@shared/dictionary/persian';
 import { BaseResponse } from 'src/shared/result-model/base-result-model';
+import { JwtPayload } from '../interfaces/jwt-payload.interface';
 
 @Injectable()
 export class AuthService {
@@ -30,7 +31,7 @@ export class AuthService {
     if (user) {
       const userRole: Role = user.userRole;
       const defaultRole: Role = Role.User;
-      let payload: any;
+      let payload: JwtPayload;
 
       if (!userRole)
         payload = {
@@ -134,7 +135,7 @@ export class AuthService {
     return await this.notificationService.create(notification);
   }
 
-  async verifyPayload(payload: any): Promise<User> {
+  async verifyPayload(payload: JwtPayload): Promise<User> {
     let user: User;
 
     try {
