@@ -5,9 +5,12 @@ import { Role } from '@root/auth/enums/role.enum';
 import { NotificationService } from '@root/notification/domain/service/Notification.service';
 import { Profile } from '@root/profile/domain/schema/Profile.schema';
 import { ProfileService } from '@root/profile/domain/service/Profile.service';
+import { UserDto } from '@root/user/application/dto/user.dto';
 import { User } from '@root/user/domain/schema/user.schema';
 import { UserService } from '@root/user/domain/service/user.service';
+import { AppConfig } from '@shared/config/app.config';
 import { persian } from '@shared/dictionary/persian';
+import * as bcrypt from 'bcrypt';
 import { BaseResponse } from 'src/shared/result-model/base-result-model';
 import { JwtPayload } from '../interfaces/jwt-payload.interface';
 
@@ -29,19 +32,9 @@ export class AuthService {
     );
 
     if (user) {
-      const userRole: Role = user.userRole;
-      const defaultRole: Role = Role.User;
-      let payload: JwtPayload;
+      const token = await this.getToken(user);
+      await this.updateRefreshTokenInUser(token, user._id);
 
-      if (!userRole)
-        payload = {
-          id: user._id,
-          profileId: user.profileId,
-          role: defaultRole,
-        };
-      else
-        payload = { id: user._id, profileId: user.profileId, role: userRole };
-      const token = this.jwtService.sign(payload);
       this.result.init({
         data: token,
         success: true,
@@ -60,6 +53,71 @@ export class AuthService {
 
       return this.result;
     }
+  }
+
+  async getToken(user: UserDto): Promise<string> {
+    const userRole: Role = user.userRole;
+    const defaultRole: Role = Role.User;
+    let payload: JwtPayload;
+
+    if (!userRole)
+      payload = {
+        id: user._id,
+        profileId: user.profileId,
+        role: defaultRole,
+      };
+    else payload = { id: user._id, profileId: user.profileId, role: userRole };
+    const accessToken = await this.jwtService.sign(payload, {
+      secret: AppConfig.SecretKey,
+      expiresIn: +AppConfig.ExpiresIn,
+    });
+    return accessToken;
+  }
+  async getNewToken(user: UserDto): Promise<BaseResponse<any>> {
+    const token: string = await this.getToken(user);
+    await this.updateRefreshTokenInUser(token, user._id);
+    this.result.init({
+      data: token,
+      success: true,
+      successMassage: undefined,
+      errorMassage: undefined,
+    });
+
+    return this.result;
+  }
+  async getUserIfRefreshTokenMatches(
+    refreshToken: string,
+    id: string,
+  ): Promise<BaseResponse<UserDto>> {
+    const user = await this.userService.findOne(id);
+
+    const isRefreshTokenMatching = await bcrypt.compare(
+      refreshToken,
+      user.data.hashedRefreshToken,
+    );
+
+    if (isRefreshTokenMatching) {
+      await this.updateRefreshTokenInUser(null, id);
+      return user;
+    } else {
+      throw new UnauthorizedException();
+      0;
+    }
+  }
+  async updateRefreshTokenInUser(
+    newTown: string,
+    id: string,
+  ): Promise<BaseResponse<UserDto>> {
+    if (newTown) {
+      newTown = await bcrypt.hash(newTown, 10);
+    }
+
+    const user: BaseResponse<UserDto> = await this.userService.findOne(id);
+    user.data.hashedRefreshToken = newTown;
+    return await this.userService.update(id, user.data);
+  }
+  async signOut(user: UserDto): Promise<BaseResponse<any>> {
+    return await this.updateRefreshTokenInUser(undefined, user._id);
   }
 
   async register(body: RegisterDto): Promise<BaseResponse<any>> {

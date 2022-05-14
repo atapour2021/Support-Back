@@ -29,3 +29,16 @@ export class RegisterDto extends BaseModel {
   @ApiProperty()
   userRole: Role;
 }
+
+export class RefreshTokenDto {
+  @ApiProperty()
+  refresh_token: string;
+
+  @ApiProperty()
+  userId: string;
+}
+
+export class LogoutDto {
+  @ApiProperty()
+  userId: string;
+}

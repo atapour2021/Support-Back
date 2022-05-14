@@ -1,5 +1,6 @@
 export enum AppConfig {
-  SecretKey = 'Support App Secret Key',
-  ExpiresIn = '1d',
+  SecretKey = 'APP_SECRET',
+  ExpiresIn = '90',
+  RefreshTokenExpiresIn = '90',
   Algorithm = 'HS384',
 }

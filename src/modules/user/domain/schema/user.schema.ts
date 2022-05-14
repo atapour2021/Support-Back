@@ -7,6 +7,8 @@ export type UserDocument = User & Document;
 
 @Schema()
 export class User implements IUser {
+  _id: string;
+
   @Prop({ required: true })
   userName: string;
 
@@ -27,6 +29,9 @@ export class User implements IUser {
 
   @Prop()
   profileId: string;
+
+  @Prop()
+  hashedRefreshToken: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
