@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { AuthService } from '@root/auth/domain/service/auth.service';
 import { SponsorDto } from '@root/Sponsor/application/dto/Sponsor.dto';
 import { UserService } from '@root/user/domain/service/user.service';
 import { persian } from '@shared/dictionary/persian';
@@ -14,6 +15,7 @@ export class SponsorService {
   constructor(
     private readonly sponsorRepository: SponsorRepository,
     private readonly userService: UserService,
+    private readonly authService: AuthService,
   ) {}
 
   async findAll(): Promise<any> {
@@ -54,6 +56,7 @@ export class SponsorService {
   async create(Sponsor: Sponsor): Promise<BaseResponse<any>> {
     const sponser: SponsorDto = await this.sponsorRepository.create(Sponsor);
     const result = await this.userService.changeRole(sponser.userId);
+    await this.authService.signOut(Sponsor.userId);
 
     this.result.init({
       data: result,

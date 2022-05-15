@@ -1,11 +1,11 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { UserDto } from '@root/user/application/dto/user.dto';
 import { UserService } from '@root/user/domain/service/user.service';
 import { BaseResponse } from '@shared/result-model/base-result-model';
 import { JWTAuthGuard } from '../domain/guards/jwt-auth.guard';
 import { AuthService } from '../domain/service/auth.service';
-import { LoginDto, LogoutDto, RefreshTokenDto, RegisterDto } from './auth.dto';
+import { LoginDto, LogoutDto, RegisterDto } from './auth.dto';
 
 @ApiTags('auth')
 @Controller()
@@ -32,14 +32,12 @@ export class AuthController {
     const user: BaseResponse<UserDto> = await this.userService.findOne(
       body.userId,
     );
-    return this.authService.signOut(user.data);
+    return this.authService.signOut(user.data._id);
   }
 
-  @Post('/refresh-token')
-  async refreshToken(@Body() body: RefreshTokenDto) {
-    const user: BaseResponse<UserDto> = await this.userService.findOne(
-      body.userId,
-    );
+  @Get('refreshToken/:userId')
+  async refreshToken(@Param('userId') userId: string) {
+    const user: BaseResponse<UserDto> = await this.userService.findOne(userId);
     return this.authService.getNewToken(user.data);
   }
 }

@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
+import { AuthModule } from '@root/auth/auth.module';
 import { UserModule } from '@root/user/user.module';
 import { SharedModule } from '@shared/shared.module';
 import { SponsorController } from './application/controllers/Sponsor.controller';
@@ -12,6 +13,7 @@ import { SponsorService } from './domain/service/Sponsor.service';
     MongooseModule.forFeature([{ name: Sponsor.name, schema: SponsorSchema }]),
     SharedModule,
     UserModule,
+    AuthModule,
   ],
   controllers: [SponsorController],
   providers: [SponsorRepository, SponsorService],
