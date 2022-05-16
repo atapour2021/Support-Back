@@ -78,23 +78,8 @@ export class TokenService {
 
     return this.result;
   }
-  async ValidateToken(req: any): Promise<BaseResponse<any>> {
-    const isAuth = await this.tokenRepository.canActivate(req);
-    if (!isAuth) {
-      this.result.init({
-        data: null,
-        success: true,
-        successMassage: undefined,
-        errorMassage: undefined,
-      });
-    } else {
-      this.result.init({
-        data: null,
-        success: false,
-        successMassage: undefined,
-        errorMassage: undefined,
-      });
-    }
-    return this.result;
+  async ValidateToken(userId: string): Promise<boolean> {
+    const isAuth = await this.tokenRepository.checkTokenExpire(userId);
+    return isAuth;
   }
 }

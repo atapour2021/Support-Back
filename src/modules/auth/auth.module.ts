@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
 import { NotificationModule } from '@root/notification/notification.module';
 import { ProfileModule } from '@root/profile/profile.module';
-import { TokenModule } from '@root/token/token.module';
 import { SharedModule } from '@shared/shared.module';
 import { UserModule } from '../user/user.module';
 import { AuthController } from './application/auth.controller';
@@ -17,7 +16,6 @@ import { JwtStrategy } from './domain/strategies/jwt.strategy';
     SharedModule,
     ProfileModule,
     NotificationModule,
-    TokenModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, AuthRepository, JwtStrategy],

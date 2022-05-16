@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
 import { RolesGuard } from '@root/auth/domain/guards/roles.guard';
+import { TokenModule } from '@root/token/token.module';
 import { AppConfig } from './config/app.config';
 
 @Module({
@@ -16,6 +17,7 @@ import { AppConfig } from './config/app.config';
         algorithms: [AppConfig.Algorithm],
       },
     }),
+    TokenModule,
   ],
   providers: [
     {
@@ -23,6 +25,6 @@ import { AppConfig } from './config/app.config';
       useClass: RolesGuard,
     },
   ],
-  exports: [JwtModule],
+  exports: [JwtModule, TokenModule],
 })
 export class SharedModule {}
