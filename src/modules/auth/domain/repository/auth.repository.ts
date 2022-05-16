@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { InjectModel } from '@nestjs/mongoose';
-import { AuthDto, RegisterDto } from '@root/auth/application/auth.dto';
+import { RegisterDto } from '@root/auth/application/auth.dto';
 import { Role } from '@root/auth/enums/role.enum';
 import { NotificationService } from '@root/notification/domain/service/Notification.service';
 import { ProfileDto } from '@root/Profile/application/dto/Profile.dto';
@@ -13,25 +12,18 @@ import { AppConfig } from '@shared/config/app.config';
 import { persian } from '@shared/dictionary/persian';
 import { BaseResponse } from '@shared/result-model/base-result-model';
 import * as bcrypt from 'bcrypt';
-import * as mongoose from 'mongoose';
-import { BaseRepository } from 'src/infrastructure/repository/base-repository';
 import { JwtPayload } from '../interfaces/jwt-payload.interface';
-import { Auth } from '../schema/Auth.schema';
 
 @Injectable()
-export class AuthRepository extends BaseRepository<AuthDto> {
+export class AuthRepository {
   result = new BaseResponse();
 
   constructor(
-    @InjectModel(Auth.name)
-    private readonly authModel: mongoose.Model<AuthDto>,
     private readonly jwtService: JwtService,
     private readonly userService: UserService,
     private readonly profileService: ProfileService,
     private readonly notificationService: NotificationService,
-  ) {
-    super(authModel);
-  }
+  ) {}
 
   async getToken(user: UserDto): Promise<string> {
     const userRole: Role = user.userRole;
@@ -53,15 +45,15 @@ export class AuthRepository extends BaseRepository<AuthDto> {
   }
 
   async updateRefreshTokenInUser(
-    newTown: string,
+    newToken: string,
     id: string,
   ): Promise<BaseResponse<UserDto>> {
-    if (newTown) {
-      newTown = await bcrypt.hash(newTown, 10);
+    if (newToken) {
+      newToken = await bcrypt.hash(newToken, 10);
     }
 
     const user: BaseResponse<UserDto> = await this.userService.findOne(id);
-    user.data.hashedRefreshToken = newTown;
+    user.data.hashedRefreshToken = newToken;
     return await this.userService.update(id, user.data);
   }
 

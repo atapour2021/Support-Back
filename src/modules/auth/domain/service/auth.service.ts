@@ -1,18 +1,15 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import {
-  AuthDto,
-  LoginDto,
-  RegisterDto,
-} from '@root/auth/application/auth.dto';
+import { LoginDto, RegisterDto } from '@root/auth/application/auth.dto';
+import { TokenDto } from '@root/token/application/dto/token.dto';
+import { TokenService } from '@root/token/domian/service/token.service';
 import { UserDto } from '@root/user/application/dto/user.dto';
 import { User } from '@root/user/domain/schema/user.schema';
 import { UserService } from '@root/user/domain/service/user.service';
 import { persian } from '@shared/dictionary/persian';
-import { ListResponse } from '@shared/result-model/list.result';
+import * as bcrypt from 'bcrypt';
 import { BaseResponse } from 'src/shared/result-model/base-result-model';
 import { JwtPayload } from '../interfaces/jwt-payload.interface';
 import { AuthRepository } from '../repository/auth.repository';
-import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -21,6 +18,7 @@ export class AuthService {
   constructor(
     private readonly userService: UserService,
     private readonly authRepository: AuthRepository,
+    private readonly tokenService: TokenService,
   ) {}
 
   async login(body: LoginDto): Promise<BaseResponse<any>> {
@@ -38,7 +36,7 @@ export class AuthService {
         userId: user._id,
         expire: false,
       };
-      await this.create(body);
+      await this.tokenService.create(body);
 
       this.result.init({
         data: token,
@@ -74,13 +72,13 @@ export class AuthService {
   }
 
   async signOut(userId: string): Promise<BaseResponse<any>> {
-    const authList: any = await this.findAll();
+    const authList: any = await this.tokenService.findAll();
 
-    const auth: AuthDto = authList.data.find(
-      (a: AuthDto) => a.userId === userId.toString() && a.expire == false,
+    const auth: TokenDto = authList.data.find(
+      (a: TokenDto) => a.userId === userId.toString() && a.expire == false,
     );
     auth.expire = true;
-    await this.update(auth._id, auth);
+    await this.tokenService.update(auth._id, auth);
     return await this.authRepository.updateRefreshTokenInUser(null, userId);
   }
 
@@ -125,73 +123,5 @@ export class AuthService {
     delete user.password;
 
     return user;
-  }
-
-  async findAll(): Promise<any> {
-    const Auths = await this.authRepository.findAll();
-    const result = {
-      data: Auths,
-      success: true,
-      total: Auths.length,
-    };
-
-    return result;
-  }
-  async findAllByPagination(
-    page: number,
-    pageSize: number,
-  ): Promise<ListResponse<AuthDto>> {
-    const Auths: AuthDto[] = await this.authRepository.findAll();
-    const result = this.authRepository.paginate(Auths, page, pageSize);
-
-    return result;
-  }
-  async findOne(id: string): Promise<BaseResponse<any>> {
-    const result: AuthDto = await this.authRepository.findById(id);
-
-    this.result.init({
-      data: result,
-      success: true,
-      successMassage: undefined,
-      errorMassage: undefined,
-    });
-
-    return this.result;
-  }
-  async create(Auth: AuthDto): Promise<BaseResponse<any>> {
-    const result: AuthDto = await this.authRepository.create(Auth);
-
-    this.result.init({
-      data: result,
-      success: true,
-      successMassage: undefined,
-      errorMassage: undefined,
-    });
-
-    return this.result;
-  }
-  async update(id: string, Auth: AuthDto): Promise<BaseResponse<any>> {
-    const result: AuthDto = await this.authRepository.update(id, Auth);
-
-    this.result.init({
-      data: result,
-      success: true,
-      successMassage: undefined,
-      errorMassage: undefined,
-    });
-
-    return this.result;
-  }
-  async delete(id: string): Promise<BaseResponse<any>> {
-    const result = await this.authRepository.delete(id);
-
-    this.result.init({
-      data: result,
-      success: true,
-      successMassage: persian.DeletedSuccessfully,
-      errorMassage: undefined,
-    });
-
-    return this.result;
   }
 }

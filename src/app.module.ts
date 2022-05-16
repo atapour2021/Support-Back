@@ -8,6 +8,7 @@ import {
   NotificationModule,
   ProfileModule,
   SponsorModule,
+  TokenModule,
   UserModule,
 } from './modules';
 
@@ -22,6 +23,7 @@ import {
     NotificationModule,
     AdvertiseModule,
     SponsorModule,
+    TokenModule,
   ],
 })
 export class AppModule {}
