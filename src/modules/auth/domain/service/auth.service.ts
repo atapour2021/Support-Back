@@ -29,7 +29,6 @@ export class AuthService {
 
     if (user) {
       const token = await this.authRepository.getToken(user);
-      await this.authRepository.updateRefreshTokenInUser(token, user._id);
       const hashToken = await bcrypt.hash(token, 10);
       const body: any = {
         hashToken: hashToken,
@@ -60,7 +59,13 @@ export class AuthService {
 
   async getNewToken(user: UserDto): Promise<BaseResponse<any>> {
     const token: string = await this.authRepository.getToken(user);
-    await this.authRepository.updateRefreshTokenInUser(token, user._id);
+    const hashToken = await bcrypt.hash(token, 10);
+    const body: any = {
+      hashToken: hashToken,
+      userId: user._id,
+      expire: false,
+    };
+    await this.tokenService.create(body);
     this.result.init({
       data: token,
       success: true,
@@ -73,13 +78,13 @@ export class AuthService {
 
   async signOut(userId: string): Promise<BaseResponse<any>> {
     const authList: any = await this.tokenService.findAll();
-
     const auth: TokenDto = authList.data.find(
-      (a: TokenDto) => a.userId === userId.toString() && a.expire == false,
+      (a: TokenDto) =>
+        a.userId.toString() === userId.toString() && a.expire == false,
     );
     auth.expire = true;
-    await this.tokenService.update(auth._id, auth);
-    return await this.authRepository.updateRefreshTokenInUser(null, userId);
+    const result = await this.tokenService.update(auth._id, auth);
+    return result;
   }
 
   async register(body: RegisterDto): Promise<BaseResponse<any>> {

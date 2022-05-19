@@ -3,6 +3,7 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { UserDto } from '@root/user/application/dto/user.dto';
 import { UserService } from '@root/user/domain/service/user.service';
 import { BaseResponse } from '@shared/result-model/base-result-model';
+import { AuthGuard } from '../domain/guards/auth.guard';
 import { JWTAuthGuard } from '../domain/guards/jwt-auth.guard';
 import { AuthService } from '../domain/service/auth.service';
 import { LoginDto, LogoutDto, RegisterDto } from './auth.dto';
@@ -27,7 +28,7 @@ export class AuthController {
 
   @Post('/logout')
   @ApiBearerAuth('access-token')
-  @UseGuards(JWTAuthGuard)
+  @UseGuards(JWTAuthGuard, AuthGuard)
   async logout(@Body() body: LogoutDto) {
     const user: BaseResponse<UserDto> = await this.userService.findOne(
       body.userId,

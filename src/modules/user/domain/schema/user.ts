@@ -9,5 +9,4 @@ export interface IUser {
   password: string;
   userRole: Role;
   profileId: string;
-  hashedRefreshToken: string;
 }

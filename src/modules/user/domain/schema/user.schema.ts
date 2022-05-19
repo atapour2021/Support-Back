@@ -29,9 +29,6 @@ export class User implements IUser {
 
   @Prop()
   profileId: string;
-
-  @Prop()
-  hashedRefreshToken: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

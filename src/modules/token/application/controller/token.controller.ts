@@ -11,6 +11,7 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Roles } from '@root/auth/domain/decorator/roles.decorator';
+import { AuthGuard } from '@root/auth/domain/guards/auth.guard';
 import { JWTAuthGuard } from '@root/auth/domain/guards/jwt-auth.guard';
 import { Role } from '@root/auth/enums/role.enum';
 import { TokenService } from '@root/token/domian/service/token.service';
@@ -24,7 +25,7 @@ export class TokenController {
   @Get('/:page/:pageSize')
   @Roles(Role.Admin)
   @ApiBearerAuth('access-token')
-  @UseGuards(JWTAuthGuard)
+  @UseGuards(JWTAuthGuard, AuthGuard)
   async getAll(
     @Param('page') page: number,
     @Param('pageSize') pageSize: number,
@@ -35,7 +36,7 @@ export class TokenController {
   @Get(':id')
   @Roles(Role.Admin)
   @ApiBearerAuth('access-token')
-  @UseGuards(JWTAuthGuard)
+  @UseGuards(JWTAuthGuard, AuthGuard)
   async find(@Param('id') id: string) {
     return await this.service.findOne(id);
   }
@@ -43,7 +44,7 @@ export class TokenController {
   @Post()
   @Roles(Role.Admin)
   @ApiBearerAuth('access-token')
-  @UseGuards(JWTAuthGuard)
+  @UseGuards(JWTAuthGuard, AuthGuard)
   async create(@Body() tokenDto: TokenDto) {
     return await this.service.create(tokenDto);
   }
@@ -51,7 +52,7 @@ export class TokenController {
   @Put(':id')
   @Roles(Role.Admin)
   @ApiBearerAuth('access-token')
-  @UseGuards(JWTAuthGuard)
+  @UseGuards(JWTAuthGuard, AuthGuard)
   async update(@Param('id') id: string, @Body() tokenDto: TokenDto) {
     return await this.service.update(id, tokenDto);
   }
@@ -59,14 +60,14 @@ export class TokenController {
   @Delete(':id')
   @Roles(Role.Admin)
   @ApiBearerAuth('access-token')
-  @UseGuards(JWTAuthGuard)
+  @UseGuards(JWTAuthGuard, AuthGuard)
   async delete(@Param('id') id: string) {
     return await this.service.delete(id);
   }
 
   @Get()
   @ApiBearerAuth('access-token')
-  @UseGuards(JWTAuthGuard)
+  @UseGuards(JWTAuthGuard, AuthGuard)
   async checkAuth(@Req() req: any) {
     return await this.service.ValidateToken(req);
   }

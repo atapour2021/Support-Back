@@ -33,7 +33,6 @@ export class UserService {
     pageSize: number,
   ): Promise<ListResponse<any>> {
     const users: UserDto[] = await this.userRepository.findAll();
-
     const result = this.userRepository.paginate(users, page, pageSize);
 
     return result;
@@ -79,6 +78,9 @@ export class UserService {
   }
 
   async delete(id: string): Promise<BaseResponse<any>> {
+    const user: UserDto = await this.userRepository.findById(id);
+    const profile = await this.profileService.findOne(user.profileId);
+    await this.profileService.delete(profile._id);
     const result = await this.userRepository.delete(id);
 
     this.result.init({

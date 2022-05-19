@@ -79,7 +79,6 @@ export class TokenService {
     return this.result;
   }
   async ValidateToken(userId: string): Promise<boolean> {
-    const isAuth = await this.tokenRepository.checkTokenExpire(userId);
-    return isAuth;
+    return await this.tokenRepository.checkTokenExpire(userId);
   }
 }

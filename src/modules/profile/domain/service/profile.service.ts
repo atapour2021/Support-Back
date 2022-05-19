@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ProfileDto } from '@root/Profile/application/dto/Profile.dto';
 import { persian } from '@shared/dictionary/persian';
 import { BaseResponse } from '@shared/result-model/base-result-model';
+import mongoose from 'mongoose';
 import { ProfileRepository } from '../repository/Profile.repository';
 import { Profile } from '../schema/Profile.schema';
 
@@ -38,6 +39,10 @@ export class ProfileService {
 
   async delete(id: string): Promise<ProfileDto> {
     return await this.profileRepository.delete(id);
+  }
+
+  async deleteProfile(id: string, session?: mongoose.ClientSession | null) {
+    return await this.profileRepository.delete(id, session);
   }
 
   async addAvatar(id: string, imagePath: string): Promise<BaseResponse<any>> {

@@ -26,7 +26,4 @@ export class UserDto extends BaseModel implements IUser {
 
   @ApiProperty()
   profileId: string;
-
-  @ApiProperty()
-  hashedRefreshToken: string;
 }

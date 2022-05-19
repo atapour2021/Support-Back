@@ -1,4 +1,5 @@
 import { ListResponse } from '@shared/result-model/list.result';
+import mongoose from 'mongoose';
 import { Model } from 'mongoose';
 import { BaseModel } from '../model/base-model';
 
@@ -22,8 +23,18 @@ export class BaseRepository<T extends BaseModel> {
     return await this.model.find().exec();
   }
 
-  public async delete(id: string): Promise<T> {
-    return await this.model.findByIdAndRemove(id).exec();
+  public async delete(
+    id: string,
+    session?: mongoose.ClientSession | null,
+  ): Promise<T> {
+    return await this.model.findByIdAndRemove(id).session(session).exec();
+  }
+
+  public async deleteMany(
+    id: string,
+    session?: mongoose.ClientSession | null,
+  ): Promise<any> {
+    return await this.model.deleteMany({ _id: id }).session(session).exec();
   }
 
   public paginate(

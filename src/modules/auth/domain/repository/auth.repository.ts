@@ -11,7 +11,6 @@ import { UserService } from '@root/user/domain/service/user.service';
 import { AppConfig } from '@shared/config/app.config';
 import { persian } from '@shared/dictionary/persian';
 import { BaseResponse } from '@shared/result-model/base-result-model';
-import * as bcrypt from 'bcrypt';
 import { JwtPayload } from '../interfaces/jwt-payload.interface';
 
 @Injectable()
@@ -42,19 +41,6 @@ export class AuthRepository {
       expiresIn: +AppConfig.ExpiresIn,
     });
     return accessToken;
-  }
-
-  async updateRefreshTokenInUser(
-    newToken: string,
-    id: string,
-  ): Promise<BaseResponse<UserDto>> {
-    if (newToken) {
-      newToken = await bcrypt.hash(newToken, 10);
-    }
-
-    const user: BaseResponse<UserDto> = await this.userService.findOne(id);
-    user.data.hashedRefreshToken = newToken;
-    return await this.userService.update(id, user.data);
   }
 
   async checkAlreadyUser(body: RegisterDto): Promise<boolean> {

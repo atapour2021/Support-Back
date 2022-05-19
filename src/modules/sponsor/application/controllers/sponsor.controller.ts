@@ -6,10 +6,11 @@ import {
   Param,
   Post,
   Put,
-  UseGuards,
+  UseGuards
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Roles } from '@root/auth/domain/decorator/roles.decorator';
+import { AuthGuard } from '@root/auth/domain/guards/auth.guard';
 import { JWTAuthGuard } from '@root/auth/domain/guards/jwt-auth.guard';
 import { Role } from '@root/auth/enums/role.enum';
 import { SponsorService } from '../../domain/service/Sponsor.service';
@@ -23,7 +24,7 @@ export class SponsorController {
   @Get('/:page/:pageSize')
   @Roles(Role.Admin)
   @ApiBearerAuth('access-token')
-  @UseGuards(JWTAuthGuard)
+  @UseGuards(JWTAuthGuard, AuthGuard)
   async getAll(
     @Param('page') page: number,
     @Param('pageSize') pageSize: number,
@@ -33,7 +34,7 @@ export class SponsorController {
 
   @Get(':id')
   @ApiBearerAuth('access-token')
-  @UseGuards(JWTAuthGuard)
+  @UseGuards(JWTAuthGuard, AuthGuard)
   async find(@Param('id') id: string) {
     return await this.service.findOne(id);
   }
@@ -41,7 +42,7 @@ export class SponsorController {
   @Post()
   @Roles(Role.User)
   @ApiBearerAuth('access-token')
-  @UseGuards(JWTAuthGuard)
+  @UseGuards(JWTAuthGuard, AuthGuard)
   async create(@Body() sponsorDto: SponsorDto) {
     return await this.service.create(sponsorDto);
   }
@@ -49,7 +50,7 @@ export class SponsorController {
   @Put(':id')
   @Roles(Role.Sponsor)
   @ApiBearerAuth('access-token')
-  @UseGuards(JWTAuthGuard)
+  @UseGuards(JWTAuthGuard, AuthGuard)
   async update(@Param('id') id: string, @Body() sponsorDto: SponsorDto) {
     return await this.service.update(id, sponsorDto);
   }
@@ -57,7 +58,7 @@ export class SponsorController {
   @Delete(':id')
   @Roles(Role.Admin)
   @ApiBearerAuth('access-token')
-  @UseGuards(JWTAuthGuard)
+  @UseGuards(JWTAuthGuard, AuthGuard)
   async delete(@Param('id') id: string) {
     return await this.service.delete(id);
   }
