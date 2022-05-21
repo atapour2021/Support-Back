@@ -93,7 +93,7 @@ export class UserService {
     return this.result;
   }
 
-  async changeRole(userId: string): Promise<BaseResponse<any>> {
+  async changeUserRoleToSponsor(userId: string): Promise<BaseResponse<any>> {
     const user: User = await this.userRepository.findById(userId);
     user.userRole = Role.Sponsor;
     await this.userRepository.update(userId, user);

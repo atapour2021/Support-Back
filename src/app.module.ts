@@ -7,6 +7,7 @@ import {
   MenuModule,
   NotificationModule,
   ProfileModule,
+  RequestModule,
   SponsorModule,
   TokenModule,
   UserModule,
@@ -24,6 +25,7 @@ import {
     AdvertiseModule,
     SponsorModule,
     TokenModule,
+    RequestModule,
   ],
 })
 export class AppModule {}

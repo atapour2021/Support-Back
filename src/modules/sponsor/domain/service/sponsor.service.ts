@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { AuthService } from '@root/auth/domain/service/auth.service';
+import { RequestState, Type } from '@root/request/domain/enum/request.enum';
+import { RequestService } from '@root/request/domain/service/Request.service';
 import { SponsorDto } from '@root/Sponsor/application/dto/Sponsor.dto';
+import { UserDto } from '@root/user/application/dto/user.dto';
 import { UserService } from '@root/user/domain/service/user.service';
 import { persian } from '@shared/dictionary/persian';
 import { BaseResponse } from '@shared/result-model/base-result-model';
@@ -14,8 +16,8 @@ export class SponsorService {
 
   constructor(
     private readonly sponsorRepository: SponsorRepository,
+    private readonly requestService: RequestService,
     private readonly userService: UserService,
-    private readonly authService: AuthService,
   ) {}
 
   async findAll(): Promise<any> {
@@ -53,13 +55,25 @@ export class SponsorService {
     return this.result;
   }
 
-  async create(Sponsor: Sponsor): Promise<BaseResponse<any>> {
-    const sponser: SponsorDto = await this.sponsorRepository.create(Sponsor);
-    const result = await this.userService.changeRole(sponser.userId);
-    await this.authService.signOut(Sponsor.userId);
+  async create(data: Sponsor): Promise<BaseResponse<any>> {
+    const user: BaseResponse<UserDto> = await this.userService.findOne(
+      data.userId,
+    );
+    if (user.success) {
+      const sponser: SponsorDto = await this.sponsorRepository.create(data);
+      const requestData: any = {
+        type: Type.ChangeUserRoleToSponsor,
+        applicant: user.data.fullName,
+        userId: sponser.userId,
+        requestDate: new Date(),
+        requestState: RequestState.Pending,
+        description: undefined,
+      };
+      await this.requestService.create(requestData);
+    }
 
     this.result.init({
-      data: result,
+      data: data,
       success: true,
       successMassage: persian.CreatedSuccessfully,
       errorMassage: undefined,
