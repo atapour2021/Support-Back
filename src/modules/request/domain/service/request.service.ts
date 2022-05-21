@@ -48,11 +48,10 @@ export class RequestService {
 
   async create(Request: Request): Promise<BaseResponse<any>> {
     const result: RequestDto = await this.requestRepository.create(Request);
-
     this.result.init({
       data: result,
       success: true,
-      successMassage: undefined,
+      successMassage: persian.YourRequestHasBeenSuccessfullySubmitted,
       errorMassage: undefined,
     });
 

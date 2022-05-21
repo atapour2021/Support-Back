@@ -17,7 +17,7 @@ export class RequestTypeController {
     readonly authService: AuthService,
   ) {}
 
-  @Post()
+  @Post('changeUserRole')
   @Roles(Role.Admin)
   @ApiBearerAuth('access-token')
   @UseGuards(JWTAuthGuard, AuthGuard)

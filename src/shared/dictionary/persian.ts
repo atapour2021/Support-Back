@@ -11,4 +11,6 @@ export enum persian {
   UpdatedSuccessfully = 'ویرایش با موفقیت انجام شد',
   CreatedSuccessfully = 'ثبت با موفقیت انجام شد',
   ChangeRoleSuccessfully = 'تغییر سمت با موفقیت انجام شد',
+  UserNotFound = 'کاربر پیدا نشد',
+  YourRequestHasBeenSuccessfullySubmitted = 'درخواست شما با موفقیت ثبت شد',
 }

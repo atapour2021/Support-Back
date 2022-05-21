@@ -59,25 +59,35 @@ export class SponsorService {
     const user: BaseResponse<UserDto> = await this.userService.findOne(
       data.userId,
     );
-    if (user.success) {
+    if (user) {
       const sponser: SponsorDto = await this.sponsorRepository.create(data);
-      const requestData: any = {
-        type: Type.ChangeUserRoleToSponsor,
-        applicant: user.data.fullName,
-        userId: sponser.userId,
-        requestDate: new Date(),
-        requestState: RequestState.Pending,
-        description: undefined,
-      };
-      await this.requestService.create(requestData);
+      if (sponser) {
+        const requestData: any = {
+          type: Type.ChangeUserRoleToSponsor,
+          applicant: user.data.fullName,
+          userId: sponser.userId,
+          requestDate: new Date(),
+          requestState: RequestState.Pending,
+          description: undefined,
+        };
+        const request = await this.requestService.create(requestData);
+        this.result = request;
+      } else {
+        this.result.init({
+          data: null,
+          success: false,
+          successMassage: undefined,
+          errorMassage: persian.UserNotFound,
+        });
+      }
+    } else {
+      this.result.init({
+        data: null,
+        success: false,
+        successMassage: undefined,
+        errorMassage: persian.UserNotFound,
+      });
     }
-
-    this.result.init({
-      data: data,
-      success: true,
-      successMassage: persian.CreatedSuccessfully,
-      errorMassage: undefined,
-    });
 
     return this.result;
   }

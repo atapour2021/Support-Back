@@ -58,20 +58,29 @@ export class AuthService {
   }
 
   async getNewToken(user: UserDto): Promise<BaseResponse<any>> {
-    const token: string = await this.authRepository.getToken(user);
-    const hashToken = await bcrypt.hash(token, 10);
-    const body: any = {
-      hashToken: hashToken,
-      userId: user._id,
-      expire: false,
-    };
-    await this.tokenService.create(body);
-    this.result.init({
-      data: token,
-      success: true,
-      successMassage: undefined,
-      errorMassage: undefined,
-    });
+    if (!user) {
+      this.result.init({
+        data: null,
+        success: false,
+        errorMassage: undefined,
+        successMassage: undefined,
+      });
+    } else {
+      const token: string = await this.authRepository.getToken(user);
+      const hashToken = await bcrypt.hash(token, 10);
+      const body: any = {
+        hashToken: hashToken,
+        userId: user._id,
+        expire: false,
+      };
+      await this.tokenService.create(body);
+      this.result.init({
+        data: token,
+        success: true,
+        successMassage: undefined,
+        errorMassage: undefined,
+      });
+    }
 
     return this.result;
   }
