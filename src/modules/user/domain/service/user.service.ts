@@ -94,20 +94,29 @@ export class UserService {
   }
 
   async changeUserRoleToSponsor(userId: string): Promise<BaseResponse<any>> {
-    const user: User = await this.userRepository.findById(userId);
-    user.userRole = Role.Sponsor;
-    await this.userRepository.update(userId, user);
+    const user: BaseResponse<UserDto> = await this.findOne(userId);
+    if (user == null || user.data == null) {
+      this.result.init({
+        data: null,
+        success: false,
+        successMassage: undefined,
+        errorMassage: persian.LoginUserNotFoundErrorMassage,
+      });
+    } else {
+      user.data.userRole = Role.Sponsor;
+      await this.update(userId, user.data);
 
-    const profile = await this.profileService.findOne(user.profileId);
-    profile.userRole = Role.Sponsor;
-    await this.profileService.update(user.profileId, profile);
+      const profile = await this.profileService.findOne(user.data.profileId);
+      profile.userRole = Role.Sponsor;
+      await this.profileService.update(user.data.profileId, profile);
 
-    this.result.init({
-      data: null,
-      success: true,
-      successMassage: persian.ChangeRoleSuccessfully,
-      errorMassage: undefined,
-    });
+      this.result.init({
+        data: null,
+        success: true,
+        successMassage: persian.ChangeRoleSuccessfully,
+        errorMassage: undefined,
+      });
+    }
 
     return this.result;
   }

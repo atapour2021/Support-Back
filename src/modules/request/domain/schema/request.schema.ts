@@ -25,6 +25,9 @@ export class Request implements IRequest {
   requestState: RequestState;
 
   @Prop()
+  confirm: boolean;
+
+  @Prop()
   description: string;
 }
 

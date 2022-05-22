@@ -8,6 +8,7 @@ export class Request implements IRequest {
   requestDate: Date;
   requestState: RequestState;
   description: string;
+  confirm: boolean;
 }
 export interface IRequest {
   _id: string;
@@ -17,4 +18,5 @@ export interface IRequest {
   requestDate: Date;
   requestState: RequestState;
   description: string;
+  confirm: boolean;
 }

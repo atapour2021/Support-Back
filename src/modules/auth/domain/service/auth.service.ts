@@ -86,13 +86,13 @@ export class AuthService {
   }
 
   async signOut(userId: string): Promise<BaseResponse<any>> {
-    const authList: any = await this.tokenService.findAll();
-    const auth: TokenDto = authList.data.find(
+    const tokenList: any = await this.tokenService.findAll();
+    const token: TokenDto = tokenList.data.find(
       (a: TokenDto) =>
         a.userId.toString() === userId.toString() && a.expire == false,
     );
-    auth.expire = true;
-    const result = await this.tokenService.update(auth._id, auth);
+    token.expire = true;
+    const result = await this.tokenService.update(token._id, token);
     return result;
   }
 

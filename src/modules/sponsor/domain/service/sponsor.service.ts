@@ -66,6 +66,7 @@ export class SponsorService {
           type: Type.ChangeUserRoleToSponsor,
           applicant: user.data.fullName,
           userId: sponser.userId,
+          confirm: false,
           requestDate: new Date(),
           requestState: RequestState.Pending,
           description: undefined,

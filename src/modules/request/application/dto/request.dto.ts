@@ -22,9 +22,12 @@ export class RequestDto extends BaseModel implements IRequest {
   requestState: RequestState;
 
   @ApiProperty()
+  confirm: boolean;
+
+  @ApiProperty()
   description: string;
 }
 export class ChangeUserRoleToSponsorDto extends BaseModel {
   @ApiProperty({ required: true })
-  userId: string;
+  id: string;
 }
